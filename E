@@ -1,0 +1,394 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>E-Tech Shop — Shop by Category</title>
+  <meta name="description" content="E-Tech Shop — shop phone accessories by category and order via WhatsApp." />
+  <style>
+    :root{
+      --bg:#0b0b0d;
+      --card:#0f1113;
+      --muted:#9aa3ab;
+      --accent:#1fb0ff;
+      --glass: rgba(255,255,255,0.03);
+      --radius:12px;
+      font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, Arial;
+      color-scheme: dark;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;background:linear-gradient(180deg,var(--bg),#09090a);color:#eef1f3}
+    .wrap{max-width:1200px;margin:28px auto;padding:20px}
+    header{display:flex;align-items:center;justify-content:space-between;gap:12px}
+    .brand{display:flex;gap:12px;align-items:center}
+    .logo{width:56px;height:56px;border-radius:10px;background:linear-gradient(90deg,var(--accent),#2ec4ff);display:grid;place-items:center}
+    .logo strong{color:#041017;font-size:20px}
+    h1{margin:0;font-size:20px}
+    p.lead{color:var(--muted);margin:4px 0 0;font-size:13px}
+
+    /* layout */
+    .top-controls{display:flex;gap:12px;align-items:center;margin-top:18px;flex-wrap:wrap}
+    .search{flex:1;min-width:220px}
+    .search input{width:100%;padding:12px 14px;border-radius:10px;border:0;background:var(--card);color:inherit;outline:3px solid rgba(31,176,255,0.04)}
+    .filters{display:flex;gap:8px;flex-wrap:wrap}
+    .chip{padding:8px 12px;border-radius:999px;background:var(--glass);border:1px solid rgba(255,255,255,0.03);cursor:pointer;font-weight:700}
+    .chip.active{background:linear-gradient(90deg,var(--accent),#22a5ff);color:#041017;border:0}
+    .controls-right{display:flex;gap:8px;align-items:center}
+    .btn{padding:10px 12px;border-radius:10px;border:0;background:transparent;color:var(--accent);cursor:pointer;font-weight:700}
+    .btn.primary{background:linear-gradient(90deg,var(--accent),#22a5ff);color:#041017}
+    .copy-small{background:transparent;border:1px solid rgba(255,255,255,0.04);padding:8px 10px;border-radius:8px;color:var(--muted);font-weight:700}
+
+    .content{display:grid;grid-template-columns:260px 1fr;gap:18px;margin-top:18px}
+    aside.sidebar{background:var(--card);padding:14px;border-radius:var(--radius)}
+    .cat-list{display:flex;flex-direction:column;gap:8px;margin-top:10px}
+    .cat-item{padding:10px;border-radius:8px;background:var(--glass);cursor:pointer;font-weight:700}
+    .cat-item.active{background:linear-gradient(90deg,var(--accent),#22a5ff);color:#041017}
+
+    section.shop{padding:10px}
+    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+    .card{background:linear-gradient(180deg,var(--card),#0b0c0e);padding:12px;border-radius:12px;display:flex;flex-direction:column;min-height:280px}
+    .prod-img{height:160px;border-radius:10px;background:#0a0a0b;display:grid;place-items:center;overflow:hidden}
+    .prod-img img{width:100%;height:100%;object-fit:cover;display:block}
+    .meta{display:flex;justify-content:space-between;align-items:center;margin-top:10px}
+    .price{color:var(--accent);font-weight:900}
+    .desc{color:var(--muted);font-size:13px;margin-top:8px;flex:1}
+    .prod-actions{display:flex;gap:8px;margin-top:10px}
+    .order-btn{flex:1;padding:10px;border-radius:8px;border:0;cursor:pointer;background:linear-gradient(90deg,var(--accent),#22a5ff);color:#041017;font-weight:900}
+    .wa-btn{padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.05);background:transparent;color:var(--accent);cursor:pointer;font-weight:700}
+
+    .no-results{padding:18px;border-radius:10px;background:var(--glass);color:var(--muted);text-align:center}
+
+    footer{margin-top:22px;padding:12px;border-radius:12px;background:transparent;color:var(--muted);display:flex;justify-content:space-between;align-items:center}
+    @media (max-width:980px){
+      .content{grid-template-columns:1fr}
+      .grid{grid-template-columns:repeat(2,1fr)}
+      aside.sidebar{order:2}
+    }
+    @media (max-width:600px){
+      .grid{grid-template-columns:1fr}
+      header{flex-direction:column;align-items:flex-start;gap:10px}
+      .top-controls{flex-direction:column;align-items:stretch}
+      .controls-right{width:100%;justify-content:space-between}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <div class="logo" aria-hidden><strong>ET</strong></div>
+        <div>
+          <h1>E-Tech Shop</h1>
+          <p class="lead">Shop phone accessories by category. Order easily via WhatsApp.</p>
+        </div>
+      </div>
+
+      <div>
+        <button class="btn copy-small" id="copyOpayTop">Copy Opay details</button>
+        <a class="btn" href="https://www.instagram.com/elaneslakeside?igsh=ZGlxcmhobTVjcGNs" target="_blank">Instagram</a>
+      </div>
+    </header>
+
+    <div class="top-controls">
+      <div class="search"><input id="searchInput" placeholder="Search products (e.g. 'charger', 'earbuds') — press Enter or click filter"/></div>
+      <div class="filters" id="filtersRow" aria-hidden>
+        <!-- chips inserted by JS -->
+      </div>
+
+      <div class="controls-right">
+        <select id="categorySelect" style="padding:10px;border-radius:8px;background:var(--card);color:inherit;border:0;">
+          <option value="all">All categories</option>
+        </select>
+        <button class="btn primary" id="resetBtn">Reset</button>
+      </div>
+    </div>
+
+    <div class="content">
+      <aside class="sidebar" aria-label="categories">
+        <strong>Categories</strong>
+        <div class="cat-list" id="catList">
+          <!-- categories inserted by JS -->
+        </div>
+
+        <hr style="margin:12px 0;border:none;border-top:1px solid rgba(255,255,255,0.03)">
+
+        <div>
+          <strong>Contact</strong>
+          <p style="margin:6px 0;color:var(--muted);font-size:13px">
+            Phone: <a href="tel:09062824287" style="color:var(--accent);text-decoration:none">09062824287</a><br>
+            WhatsApp: <button class="btn" id="openWhatsApp">Message</button><br>
+            Email: <a href="mailto:e45395401@gmail.com" style="color:var(--accent);text-decoration:none">e45395401@gmail.com</a>
+          </p>
+        </div>
+      </aside>
+
+      <section class="shop">
+        <div id="productGrid" class="grid" aria-live="polite">
+          <!-- product cards inserted by JS -->
+        </div>
+
+        <div id="noResults" class="no-results" style="display:none">No products found.</div>
+      </section>
+    </div>
+
+    <footer>
+      <div>© <strong>E-Tech Gadgets</strong></div>
+      <div style="font-size:13px;color:var(--muted)">Opay: 8053108219 — Aderanti Olamilekan Timothy</div>
+    </footer>
+  </div>
+
+  <script>
+    /************************************************************************
+     * Configuration / Data
+     *
+     * - Replace image URLs in products[] with your externally hosted image links.
+     * - Add/remove products as needed.
+     * - WA_NUMBER must be in international format without the '+' and without leading zero(s).
+     *   Example for +2347080318149 => "2347080318149"
+     ************************************************************************/
+
+    const OPAY_DETAILS = 'Opay — 8053108219 — Aderanti Olamilekan Timothy';
+    const WA_NUMBER = '2347080318149'; // +234 708 031 8149 -> use "2347080318149"
+
+    // Product data: id, name, category, price (string), description, image (replace with your hosted URL)
+    // IMPORTANT: you will replace the placeholder image URLs with your external image URLs later.
+    const products = [
+      // Protection & Cases
+      {id:'PC001', name:'Silicone Phone Case (Transparent)', category:'Protection & Cases', price:'₦1,200', desc:'Slim silicone case — soft touch.', img:'https://via.placeholder.com/600x400?text=Silicone+Case'},
+      {id:'PC002', name:'Tempered Glass Screen Protector', category:'Protection & Cases', price:'₦800', desc:'9H hardness, ultra-clear.', img:'https://via.placeholder.com/600x400?text=Screen+Protector'},
+      {id:'PC003', name:'Rugged Protective Cover', category:'Protection & Cases', price:'₦2,500', desc:'Military-grade shock protection.', img:'https://via.placeholder.com/600x400?text=Rugged+Cover'},
+
+      // Charging & Power
+      {id:'CH001', name:'Fast USB-C Wall Charger (PD)', category:'Charging & Power', price:'₦2,500', desc:'PD fast charge 30W.', img:'https://via.placeholder.com/600x400?text=USB-C+Charger'},
+      {id:'CH002', name:'Braided USB-C Cable (1.2m)', category:'Charging & Power', price:'₦900', desc:'Durable braided cable.', img:'https://via.placeholder.com/600x400?text=Braided+Cable'},
+      {id:'CH003', name:'10,000mAh Power Bank', category:'Charging & Power', price:'₦6,000', desc:'Compact high-capacity power bank.', img:'https://via.placeholder.com/600x400?text=Power+Bank'},
+
+      // Audio Accessories
+      {id:'AU001', name:'Wired Earphones with Mic', category:'Audio Accessories', price:'₦1,000', desc:'Clear mic, tangle-free.', img:'https://via.placeholder.com/600x400?text=Wired+Earphones'},
+      {id:'AU002', name:'Bluetooth Wireless Earbuds', category:'Audio Accessories', price:'₦5,500', desc:'True wireless, long battery.', img:'https://via.placeholder.com/600x400?text=Wireless+Earbuds'},
+
+      // Speakers & Sound
+      {id:'SP001', name:'Portable Bluetooth Speaker', category:'Speakers & Sound', price:'₦4,200', desc:'Loud portable speaker.', img:'https://via.placeholder.com/600x400?text=Bluetooth+Speaker'},
+
+      // Car Accessories
+      {id:'CA001', name:'Magnetic Car Phone Holder', category:'Car Accessories', price:'₦1,500', desc:'Magnetic dashboard mount.', img:'https://via.placeholder.com/600x400?text=Car+Holder'},
+
+      // Camera & Video
+      {id:'CV001', name:'Mini Tripod for Phone', category:'Camera & Video Accessories', price:'₦1,300', desc:'Compact tripod for vlogging.', img:'https://via.placeholder.com/600x400?text=Mini+Tripod'},
+
+      // Smart & Utility
+      {id:'SM001', name:'Smartwatch - Basic', category:'Smart & Utility Gadgets', price:'₦8,500', desc:'Fitness tracking smartwatch.', img:'https://via.placeholder.com/600x400?text=Smartwatch'},
+
+      // Connectivity & Storage
+      {id:'CS001', name:'USB OTG Adapter', category:'Connectivity & Storage', price:'₦700', desc:'OTG for USB drives.', img:'https://via.placeholder.com/600x400?text=OTG+Adapter'},
+
+      // Cleaning & Maintenance
+      {id:'CL001', name:'Microfiber Cleaning Cloth (2-pack)', category:'Cleaning & Maintenance', price:'₦400', desc:'Lint-free cloths.', img:'https://via.placeholder.com/600x400?text=Microfiber+Cloth'},
+
+      // Decorative & Customization
+      {id:'DC001', name:'LED Phone Case', category:'Decorative & Customization', price:'₦3,900', desc:'Colorful LED back case.', img:'https://via.placeholder.com/600x400?text=LED+Case'}
+    ];
+
+    /************************************************************************
+     * End config
+     ************************************************************************/
+
+    // Build category list from products
+    const categories = Array.from(new Set(products.map(p => p.category))).sort();
+    categories.unshift('All'); // put 'All' on top
+
+    // DOM refs
+    const catList = document.getElementById('catList');
+    const filtersRow = document.getElementById('filtersRow');
+    const categorySelect = document.getElementById('categorySelect');
+    const productGrid = document.getElementById('productGrid');
+    const searchInput = document.getElementById('searchInput');
+    const noResults = document.getElementById('noResults');
+
+    // init
+    (function init(){
+      // populate category sidebar
+      categories.forEach(cat => {
+        const normalized = cat;
+        if(cat === 'All') {
+          const div = document.createElement('div'); div.className = 'cat-item active'; div.textContent = 'All'; div.dataset.cat = 'all';
+          catList.appendChild(div);
+        } else {
+          const div = document.createElement('div'); div.className = 'cat-item'; div.textContent = cat; div.dataset.cat = cat;
+          catList.appendChild(div);
+        }
+      });
+
+      // populate filter chips (top)
+      categories.forEach(cat => {
+        const chip = document.createElement('button'); chip.className = 'chip' + (cat==='All' ? ' active' : '');
+        chip.textContent = cat === 'All' ? 'All' : cat;
+        chip.dataset.cat = cat === 'All' ? 'all' : cat;
+        filtersRow.appendChild(chip);
+
+        // add to select dropdown as well
+        if(cat !== 'All'){
+          const opt = document.createElement('option'); opt.value = cat; opt.textContent = cat; categorySelect.appendChild(opt);
+        }
+      });
+
+      // render products
+      renderProducts(products);
+
+      // add event listeners
+      catList.addEventListener('click', e=>{
+        const el = e.target.closest('.cat-item');
+        if(!el) return;
+        const cat = el.dataset.cat;
+        setActiveCategory(cat);
+      });
+
+      filtersRow.addEventListener('click', e=>{
+        const chip = e.target.closest('.chip');
+        if(!chip) return;
+        const cat = chip.dataset.cat;
+        setActiveCategory(cat);
+      });
+
+      categorySelect.addEventListener('change', e=>{
+        const val = e.target.value;
+        setActiveCategory(val === 'all' ? 'all' : val);
+      });
+
+      document.getElementById('resetBtn').addEventListener('click', ()=> {
+        searchInput.value = '';
+        setActiveCategory('all');
+      });
+
+      document.getElementById('openWhatsApp').addEventListener('click', openWhatsAppChat);
+      document.getElementById('copyOpayTop').addEventListener('click', ()=> copyToClipboard(OPAY_DETAILS));
+
+      // search on Enter
+      searchInput.addEventListener('keyup', e=>{
+        if(e.key === 'Enter') applyFilters();
+      });
+
+      // quick search while typing (debounce)
+      let timer;
+      searchInput.addEventListener('input', ()=>{
+        clearTimeout(timer); timer = setTimeout(()=> applyFilters(), 350);
+      });
+    })();
+
+    function setActiveCategory(cat){
+      // update sidebar
+      document.querySelectorAll('.cat-item').forEach(i=>{
+        i.classList.toggle('active', (i.dataset.cat === cat || (cat==='all' && i.dataset.cat === 'all')));
+      });
+      // update chips
+      document.querySelectorAll('.chip').forEach(ch=> ch.classList.toggle('active', ch.dataset.cat === cat || (cat==='all' && ch.dataset.cat==='all')));
+      // update select
+      if(cat === 'all') categorySelect.value = 'all'; else categorySelect.value = cat;
+
+      applyFilters();
+    }
+
+    function applyFilters(){
+      const selectedCat = document.querySelector('.chip.active') ? document.querySelector('.chip.active').dataset.cat : 'all';
+      const q = (searchInput.value || '').trim().toLowerCase();
+
+      let results = products.slice();
+      if(selectedCat && selectedCat !== 'all') {
+        results = results.filter(p => p.category === selectedCat);
+      }
+      if(q) {
+        results = results.filter(p => (p.name + ' ' + p.desc + ' ' + p.id).toLowerCase().includes(q));
+      }
+
+      renderProducts(results);
+    }
+
+    function renderProducts(list){
+      productGrid.innerHTML = '';
+      if(!list || list.length === 0){
+        noResults.style.display = 'block';
+        return;
+      }
+      noResults.style.display = 'none';
+
+      list.forEach(p => {
+        const card = document.createElement('article'); card.className = 'card';
+        // image
+        const imgWrap = document.createElement('div'); imgWrap.className = 'prod-img';
+        const img = document.createElement('img');
+        img.src = p.img; // externally hosted image URL: replace in products[] above
+        img.alt = p.name;
+        img.loading = 'lazy';
+        imgWrap.appendChild(img);
+        card.appendChild(imgWrap);
+
+        // meta row
+        const meta = document.createElement('div'); meta.className = 'meta';
+        const title = document.createElement('div'); title.innerHTML = '<strong>' + escapeHtml(p.name) + '</strong>';
+        const price = document.createElement('div'); price.className = 'price'; price.textContent = p.price;
+        meta.appendChild(title); meta.appendChild(price);
+        card.appendChild(meta);
+
+        // desc
+        const desc = document.createElement('div'); desc.className = 'desc'; desc.textContent = p.desc + ' (Code: ' + p.id + ')';
+        card.appendChild(desc);
+
+        // actions
+        const actions = document.createElement('div'); actions.className = 'prod-actions';
+        const orderBtn = document.createElement('button'); orderBtn.className = 'order-btn'; orderBtn.textContent = 'Order on WhatsApp';
+        orderBtn.addEventListener('click', ()=> orderOnWhatsApp(p));
+        const waQuick = document.createElement('button'); waQuick.className = 'wa-btn'; waQuick.textContent = 'Quick WhatsApp';
+        waQuick.addEventListener('click', ()=> openWhatsAppWith('Hi, is ' + p.name + ' (' + p.id + ') available?'));
+        actions.appendChild(orderBtn); actions.appendChild(waQuick);
+        card.appendChild(actions);
+
+        productGrid.appendChild(card);
+      });
+    }
+
+    // Open WhatsApp chat to shop (generic message)
+    function openWhatsAppChat(){
+      const url = 'https://wa.me/' + WA_NUMBER + '?text=' + encodeURIComponent('Hello, I want to place an order with E-Tech Gadgets.');
+      window.open(url, '_blank');
+    }
+
+    // Order for specific product
+    function orderOnWhatsApp(product){
+      const message = `Hello E-Tech, I'd like to order *${product.name}* (Code: ${product.id}). Price: ${product.price}. Please confirm availability and payment details.`;
+      const url = 'https://wa.me/' + WA_NUMBER + '?text=' + encodeURIComponent(message);
+      window.open(url, '_blank');
+    }
+
+    // Quick open with custom text
+    function openWhatsAppWith(text){
+      const url = 'https://wa.me/' + WA_NUMBER + '?text=' + encodeURIComponent(text);
+      window.open(url, '_blank');
+    }
+
+    // copy to clipboard helper
+    function copyToClipboard(text){
+      if(navigator.clipboard){
+        navigator.clipboard.writeText(text).then(()=> alert('Copied: ' + text), ()=> fallbackCopy(text));
+      } else fallbackCopy(text);
+    }
+    function fallbackCopy(text){
+      const ta = document.createElement('textarea'); ta.value = text; document.body.appendChild(ta); ta.select();
+      try { document.execCommand('copy'); alert('Copied: ' + text); } catch(e){ prompt('Copy this:', text); }
+      ta.remove();
+    }
+
+    // small helper
+    document.getElementById('openWhatsApp').addEventListener('click', openWhatsAppChat);
+    document.getElementById('copyOpayTop').addEventListener('click', ()=> copyToClipboard(OPAY_DETAILS));
+
+    function escapeHtml(s){ return s.replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+
+    // Accessibility hint: announce products count
+    const observer = new MutationObserver(()=> {
+      const count = productGrid.children.length;
+      productGrid.setAttribute('aria-label', count + ' product' + (count===1?'':'s') + ' found');
+    });
+    observer.observe(productGrid, {childList:true});
+  </script>
+</body>
+</html>
