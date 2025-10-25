@@ -1,0 +1,32 @@
+E-Tech-Shop/
+│
+├── README.md
+│
+├── images/
+│   ├── cable.jpg
+│   ├── charger.jpg
+│   ├── powerbank.jpg
+│   ├── wireless.jpg
+│   ├── case.jpg
+│   ├── temperedglass.jpg
+│   ├── lensprotector.jpg
+│   ├── earbuds.jpg
+│   ├── earphones.jpg
+│   ├── holder.jpg
+│   ├── ringlight.jpg
+│   ├── flashdrive.jpg
+│   ├── ledcase.jpg
+│   ├── cleaner.jpg
+│   └── banner.png      ← (for your section header/banner)
+│
+└── .github/
+    └── workflows/
+        └── deploy.yml   ← (optional, for auto-deploy to GitHub Pages)
+
+/images
+  ├── combo-banner.jpg      ✅ (Banner)
+  ├── combo1.jpg
+  ├── combo2.jpg
+  ├── combo3.jpg
+  ├── combo4.jpg
+  ├── combo5.jpg
