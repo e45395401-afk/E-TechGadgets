@@ -325,6 +325,58 @@ Browse our products below and order easily via WhatsApp!
 ---
 
 
+## 🎁 Combo Offers (🔥 10% Bonus Discount)
+
+<div align="center">
+
+<img src="images/combo-banner.jpg" alt="E-Tech Combo Deals Banner" width="100%"/>
+
+</div>
+
+            Buy any of these combos together and enjoy **10% OFF + free delivery within campus** 🚀  
+
+<div align="center">
+
+
+---
+
+
+<img src="images/combo1.jpg" alt="Power Combo" width="300"/>
+<h3>⚡ Power Combo</h3>
+<p>Includes: Power Bank + Fast Wall Charger + Magnetic Cable</p>
+<a href="https://wa.me/2347080318149?text=Hi%20E-Tech!%20I%20want%20the%20Power%20Combo%20deal%20with%2010%%20bonus!" target="_blank">
+<img src="https://img.shields.io/badge/Order%20Power%20Combo-25D366?style=for-the-badge&logo=whatsapp&logoColor=white"/>
+</a>
+
+
+
+---
+
+
+<img src="images/combo2.jpg" alt="Protection Combo" width="300"/>
+<h3>🛡️ Protection Combo</h3>
+<p>Includes: Phone Case + Tempered Glass + Camera Protector</p>
+<a href="https://wa.me/2347080318149?text=Hi%20E-Tech!%20I%20want%20the%20Protection%20Combo%20with%2010%%20bonus!" target="_blank">
+<img src="https://img.shields.io/badge/Order%20Protection%20Combo-25D366?style=for-the-badge&logo=whatsapp&logoColor=white"/>
+</a>
+
+
+---
+
+
+<img src="images/combo3.jpg" alt="Audio Combo" width="300"/>
+<h3>🎧 Audio Combo</h3>
+<p>Includes: Wireless Earbuds + Mini Speaker + Phone Holder</p>
+<a href="https://wa.me/2347080318149?text=Hi%20E-Tech!%20I%20want%20the%20Audio%20Combo%20with%2010%%20bonus!" target="_blank">
+<img src="https://img.shields.io/badge/Order%20Audio%20Combo-25D366?style=for-the-badge&logo=whatsapp&logoColor=white"/>
+</a>
+
+</div>
+
+
+---
+
+
 ## 📦 How to Order
 
 1. Browse any product above  
